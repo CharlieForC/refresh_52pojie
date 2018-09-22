@@ -1,14 +1,16 @@
 import time
-
+import re
 import requests
 from requests import RequestException
-import re
 from selenium import webdriver
 
+SLEEP_TIME = 60
+URL = r'https://www.52pojie.cn/forum-8-1.html'
 
-def get_content(url):
+
+def get_content():
     try:
-        data = requests.get(url)
+        data = requests.get(URL)
         if data.status_code == 200:
             return data.text
         return None
@@ -23,7 +25,7 @@ def parse_page_detail(html) -> str:
     :param html: html内容
     :return: 网页内容是否包含关键字：mg, c4d, ae, 李辰
     """
-    keyword = ["mg", "c4d", "ae", "李辰", '百度']
+    keyword = ["mg", "c4d", "ae", "李辰"]
     pattern_key = re.compile(r'class="s xst">(.*?)</a>')
     result = re.findall(pattern_key, html)
     for temp in keyword:
@@ -35,13 +37,10 @@ def parse_page_detail(html) -> str:
 
 
 def action_go() -> str:
-    # 1. define url
-    url = r'https://www.52pojie.cn/forum-8-1.html'
+    # 1. get html from url
+    html = get_content()
 
-    # 2. get html from url
-    html = get_content(url)
-
-    # 3. parse html
+    # 2. parse html
     content_str = parse_page_detail(html)
     return content_str
 
@@ -52,10 +51,9 @@ if __name__ == '__main__':
 
         if content != '':
             driver = webdriver.Chrome()
-            url = r'https://www.52pojie.cn/forum-8-1.html'
-            driver.get(url)
-            time.sleep(10)
+            driver.get(URL)
+            time.sleep(SLEEP_TIME)
             exit()
         else:
             print(">>> 没有匹配的项目")
-        time.sleep(10)
+        time.sleep(SLEEP_TIME)
