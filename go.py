@@ -7,7 +7,7 @@ from selenium import webdriver
 SLEEP_TIME = 60
 URL = r'https://www.52pojie.cn/forum-8-1.html'
 
-
+#这是一个修改
 def get_content():
     try:
         data = requests.get(URL)
